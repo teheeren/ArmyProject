@@ -235,6 +235,7 @@ public class Unit extends Component {
         int m = r/2;
 		paintArrow(g2, loc.x+m, loc.y, loc.x+m, loc.y-pm );
 		
+		Game.log(name+"rank = "+rank+", file = "+file);
 		rect.setRect(loc.x, loc.y , (numFighters / rank)*10, (numFighters / file)*10);
 
 		for( int i = 0; i<numFighters; i++) {

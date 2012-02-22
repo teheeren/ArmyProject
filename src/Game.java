@@ -1,4 +1,5 @@
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.XMLDecoder;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -149,6 +151,8 @@ public class Game {
 		} else {
 	        println( 2, "\n############# " + a2.name + " WINS! #############\n");	
 		}
+		input();
+		System.exit(0);
 	}
 
 	/*********************************************************
@@ -240,7 +244,9 @@ public class Game {
 		for (Unit u : uA) {
 			cuA = u.combatUnits;
 			for (Unit cu : cuA) {
-				closeCombatPhase(u, cu);
+				if(!u.destroyed && !cu.destroyed){
+				    closeCombatPhase(u, cu);
+				}
 			}
 		}
 	}
@@ -303,7 +309,7 @@ public class Game {
 		casualtiesA = fightCombat(du, au);
 
 	 //  5.2 Combat Result (38)
-	    println( 2, "  5.2 Combat Result\n");
+	    println( 4, "  5.2 Combat Result\n");
 	    println( 2, "      "+au.name+"   "+du.name+"");
 	    // Casualties  (pa.37)
 		println( 2, "   Opponent Casualties  +"+casualtiesD+"        +"+casualtiesA);
@@ -381,7 +387,7 @@ public class Game {
 	        return;
 
 	 //  5.3 Break Test pa.39
-	    println( 2, "  5.3 Break Test");
+	    println( 4, "  5.3 Break Test");
 	    dice = rollDice();
 	    dice += rollDice();
 	    
@@ -407,7 +413,7 @@ public class Game {
 	    }
 
 	 //  5.4 Flee and Pursue
-	    println( 2, "  5.4 Flee and Pursue\n");
+	    println( 4, "  5.4 Flee and Pursue\n");
 
 	    distanceLoser = rollDice();
 	    distanceLoser += rollDice();
@@ -428,11 +434,12 @@ public class Game {
 	        pLoser.destroyed = true;
 	        pLoser.numFighters = 0;
 	        pLoser.army.numUnits--;
+	        table.repaint();
 	    }
 	    println( 2, "" );
 
 	 //  5.5 Redress Ranks
-	    println( 2, "  5.5 Redress Ranks");
+	    println( 4, "  5.5 Redress Ranks");
 	    au.redress();
 	    du.redress();
 	}
@@ -448,8 +455,8 @@ public class Game {
 	    int wound = 0;
 	    int casualties = 0;
 
-		print( 2,"  5.1 Fight Combat:  ");
-		println( 2, au.name + " against " + du.name);
+		print( 4,"  5.1 Fight Combat:  ");
+		println( 4, au.name + " against " + du.name);
 		/*
 		 * 5.1.1 Fight Combat - compare attacker and defender WS if they are the
 		 * same the attacker hits on a 4+ if the attackers is 1 or more higher
@@ -457,8 +464,8 @@ public class Game {
 		 * the attackers then the attacker will hit on a 5+
 		 */
 		// Hit test
-		print( 2,"  5.1.1 Hit test - ");
-		println( 2, "Attacker's Weapon Skill "
+		print( 4,"  5.1.1 Hit test - ");
+		println( 4, "Attacker's Weapon Skill "
 						+ au.profile.weaponSkill
 						+ ", Opponent's Weapon Skill "
 						+ du.profile.weaponSkill
@@ -466,62 +473,62 @@ public class Game {
 						+ toHitChart[au.profile.weaponSkill - 1][du.profile.weaponSkill - 1]
 						+ "+");
 		numDice = au.file;
-		print( 2,"        Throwing " + numDice + " dice: ");
+		print( 4,"        Throwing " + numDice + " dice: ");
 		for (i = 0; i < numDice; i++) {
 			dice = rollDice();
-			print( 2," " + dice);
+			print( 4," " + dice);
 			if (dice >= toHitChart[au.profile.weaponSkill - 1][du.profile.weaponSkill - 1]) {
 				hit++;
-				print( 2," - HIT!,");
+				print( 4," - HIT!,");
 			} else {
-				print( 2," - no hit,");
+				print( 4," - no hit,");
 			}
 		}
-		println( 2, "\n        Total = " + hit + " hits");
+		println( 4, "\n        Total = " + hit + " hits");
 
 	    /*
 	     *  2. Wound Test
 	     */
-		print( 2,"  5.1.2 Wound Test - ");
-		println( 2, "Attacker's Strength = " 
+		print( 4,"  5.1.2 Wound Test - ");
+		println( 4, "Attacker's Strength = " 
 				+ au.profile.toughness
 				+ ", Opponent's Toughness = "
 				+ du.profile.toughness
 				+ ", must roll "
 				+ toWoundChart[au.profile.strength - 1][du.profile.toughness - 1]
 				+ "+");
-		print( 2,"        Throwing " + hit + " dice:");
+		print( 4,"        Throwing " + hit + " dice:");
 		for (i = 0; i < hit; i++) {
 			dice = rollDice();
-			print( 2," " + dice);
+			print( 4," " + dice);
 			if (dice >= toWoundChart[au.profile.strength - 1][du.profile.toughness - 1]) {
 				wound++;
-				print( 2," - WOUND!,");
+				print( 4," - WOUND!,");
 			} else {
-				print( 2," - no wound,");
+				print( 4," - no wound,");
 			}
 		}
-		println( 2, "\n        Total = " + wound + " wound");
+		println( 4, "\n        Total = " + wound + " wound");
 		
 	    /*
 	     *  3. Saving throws
 	     */
-		print( 2,"  5.1.3 Saving throws - ");
-		println( 2, "Defender has " 
+		print( 4,"  5.1.3 Saving throws - ");
+		println( 4, "Defender has " 
 				+ du.armourSave
 				+ " armor saves");
-		print( 2,"        Throwing " + wound + " dice:");
+		print( 4,"        Throwing " + wound + " dice:");
 		for (i = 0; i < wound; i++) {
 			dice = rollDice();
-			print( 2," " + dice);
+			print( 4," " + dice);
 			if (dice >= du.armourSave) {
-				print( 2," - Save!,");
+				print( 4," - Save!,");
 			} else {
-				print( 2," - no Save,");
+				print( 4," - no Save,");
 				casualties++;
 			}
 		}
-		println( 2, "\n        Total = " + casualties + " casualties");
+		println( 4, "\n        Total = " + casualties + " casualties");
 
 		return(casualties);
 	}
@@ -583,10 +590,21 @@ public class Game {
 		latch = new CountDownLatch(1);
 	}
 
+	public static void scroll(JComponent c)
+	{
+	    Rectangle visible = c.getVisibleRect();
+	    Rectangle bounds = c.getBounds();
+	      
+	    visible.y = bounds.height - visible.height;
+        visible.x = 0;
+	    c.scrollRectToVisible(visible);
+	}
+
 	static public void println(int level, String str)
 	{
 		if (level <= debugLevel ) {
 			textArea.append( str+"\n" ); 
+			scroll(textArea);
 	        txtFrame.repaint();
 		}
 	}
@@ -595,6 +613,7 @@ public class Game {
 	{
 		if (level <= debugLevel ) {
 			textArea.append( str ); 
+			scroll(textArea);
 	        txtFrame.repaint();
 
 		}

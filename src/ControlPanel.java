@@ -37,7 +37,7 @@ public class ControlPanel extends JFrame {
 			public void actionPerformed(ActionEvent e)
 			{
 				System.out.println("You clicked the NEXT button");
-				game.latch.countDown(); 
+				Game.latch.countDown(); 
 
 			}
 		});      
