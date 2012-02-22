@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -58,13 +59,14 @@ public class Game {
 	public static JScrollPane scrollPane;
 	public static BattleField bf;
 	public static ControlPanel cp = new ControlPanel();
-	
+	public static CountDownLatch latch = new CountDownLatch(1); 
+
 
 	public Game(String name) {
 		super();
 		this.name = name;
 		
-		cp.createAndShowGUI();
+		cp.createAndShowGUI(this);
 		// game table
 		table = new JFrame(name);
 		table.addWindowListener(new WindowAdapter() {
@@ -72,6 +74,7 @@ public class Game {
                 System.exit(0);
             }
         });
+		
         
         // action log
         txtFrame = new JFrame(name);
@@ -122,10 +125,9 @@ public class Game {
 		Army a2 = armies.get(1);
 
         try {
-        	
+        	// TODO save game
 			Game.write(a1.units.get(0).profile, "xxx");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -569,7 +571,16 @@ public class Game {
 	
 	static public void input() throws IOException
 	{
-		while ( (char) System.in.read() != '\n' ); 
+//		while ( (char) System.in.read() != '\n' ); 
+		try
+		{
+			latch.await();
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		latch = new CountDownLatch(1);
 	}
 
 	static public void println(int level, String str)
