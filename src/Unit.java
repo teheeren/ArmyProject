@@ -51,6 +51,7 @@ public class Unit extends Component {
 //        repaint();
 
 	}
+	
 	public void redress() {
 		rank = ((numFighters-1) / file) +1;
 	}
