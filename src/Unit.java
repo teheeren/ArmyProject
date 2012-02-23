@@ -49,6 +49,7 @@ public class Unit extends Component {
 		this.setArmy(army);
 		this.armourSave = 3;
 //        repaint();
+		// test
 
 	}
 	
@@ -78,11 +79,24 @@ public class Unit extends Component {
 		try {
 			Thread.sleep(msec);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	public void moveDist(int dist)
+	{
+		int x2;
+		int y2;
+		x2 = (int)(Math.sin( Math.toRadians(direction)) * dist * 10) + loc.x;
+		y2 = (int)(Math.cos( Math.toRadians(direction)) * dist * 10) + loc.y;
+		Game.println(2, "direction = "+direction+", distance = "+dist );
+		Game.println(2, "moveTo x = "+x2+", y = "+y2+", direction = "+direction );
+		try {
+			moveTo(x2, y2, 10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void moveTo(int x2, int y2, int speed) throws InterruptedException
 	{
