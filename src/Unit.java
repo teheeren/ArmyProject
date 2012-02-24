@@ -87,10 +87,11 @@ public class Unit extends Component {
 	{
 		int x2;
 		int y2;
-		x2 = (int)(Math.sin( Math.toRadians(direction)) * dist * 10) + loc.x;
-		y2 = (int)(Math.cos( Math.toRadians(direction)) * dist * 10) + loc.y;
-		Game.println(2, "direction = "+direction+", distance = "+dist );
-		Game.println(2, "moveTo x = "+x2+", y = "+y2+", direction = "+direction );
+
+		x2 = (int)(Math.cos( Math.toRadians(direction-90)) * dist * 10) + loc.x;
+		y2 = (int)(Math.sin( Math.toRadians(direction-90)) * dist * 10) + loc.y;
+		Game.log(" ");
+
 		try {
 			moveTo(x2, y2, 10);
 		} catch (InterruptedException e) {
@@ -98,39 +99,54 @@ public class Unit extends Component {
 		}
 	}
 
+	public void rotate(int angle)
+	{
+	    direction = (direction + angle) % 360;
+	    moveDist(rank);
+	}
+
 	public void moveTo(int x2, int y2, int speed) throws InterruptedException
 	{
 		float dx = x2-loc.x;
 		float dy = y2-loc.y;
+		//		float dy = loc.y-y2;
+		
+		if (dx == 0)
+			dx = (float) .0001;
+		if (dy == 0)
+			dy = (float) .0001;
 		float slope = dy/dx;
 //		float x, y;
+		float b =(y2-slope*x2);
+
+		if (slope == 0)
+			slope = (float).00001;
 		
 		if (Math.abs(slope) < 1)
 		{
 			// we're changing by x
 			if (loc.x < x2)
 			{
+
 				// we're incrementing from x to x2
 			    for (; loc.x < x2; loc.x++)
 			    {
-			    	loc.y = (int)(loc.x * slope);
+			    	loc.y = (int)(((float)loc.x * slope) + b);
 			    	Game.table.validate();
 			    	Game.table.repaint();
 			    	pause(speed);
 			    }
-				Game.log("here");
 			}
 			else
 			{
 				// we're decrementing from x to x2
 			    for (; loc.x > x2; loc.x--)
 			    {
-			    	loc.y = (int)(loc.x * slope);
+			    	loc.y = (int)(((float)loc.x * slope) + b);
 			    	Game.table.validate();
 			    	Game.table.repaint();
 			    	pause(speed);
 			    }
-				Game.log("here");
 			}
 		}
 		else
@@ -141,28 +157,24 @@ public class Unit extends Component {
 				// we're incrementing y to y2
 			    for (; loc.y < y2; loc.y++)
 			    {
-			    	loc.x = (int)(loc.y / slope);
+			    	loc.x = (int)(((float)loc.y - b) / slope);
 			    	Game.table.validate();
 			    	Game.table.repaint();
 			    	pause(speed);
 			    }
-				Game.log("here");
 			}
 			else
 			{
 				// we're decrementing y to y2
 			    for (; loc.y > y2; loc.y--)
 			    {
-			    	loc.x = (int)(loc.y / slope);
+			    	loc.x = (int)(((float)loc.y - b) / slope);
 			    	Game.table.validate();
 			    	Game.table.repaint();
 			    	pause(speed);
 			    }
-				Game.log("here");
 			}
 		}
-		Game.print(2, "dx = "+dx+", dy = "+dy );
-		System.out.println( "slope ="+slope );
 
 /*
 		// detect collision with other units
@@ -223,11 +235,9 @@ public class Unit extends Component {
 		
 		int pm = profile.movement * 10;
 		int r = file * 10;
+        int m = r/2;
 
-//		g2.draw(new Ellipse2D.Float(loc.x-(pm), loc.y-(pm),
-//				pm*2, pm*2) );
-
-		g2.draw(new Arc2D.Double((double) loc.x - r,
+		g2.draw(new Arc2D.Double((double) loc.x - r - m,
 				(double) loc.y - r,
 				(double) r * 2,
 				(double) r * 2,
@@ -236,7 +246,7 @@ public class Unit extends Component {
 				Arc2D.OPEN));
 
 
-		g2.draw(new Arc2D.Double((double) loc.x,
+		g2.draw(new Arc2D.Double((double) loc.x - m,
 				(double) loc.y - r,
 				(double) r * 2,
 				(double) r * 2,
@@ -247,16 +257,14 @@ public class Unit extends Component {
 //		g2.drawLine(loc.x, loc.y, loc.x-pm, loc.y-pm);
 //		System.out.print(" pm = "+pm);
 
-        int m = r/2;
-		paintArrow(g2, loc.x+m, loc.y, loc.x+m, loc.y-pm );
+		paintArrow(g2, loc.x, loc.y, loc.x, loc.y-pm );
 		
-		Game.log(name+"rank = "+rank+", file = "+file);
-		rect.setRect(loc.x, loc.y , (numFighters / rank)*10, (numFighters / file)*10);
+		rect.setRect(loc.x-m, loc.y , (numFighters / rank)*10, (numFighters / file)*10);
 
 		for( int i = 0; i<numFighters; i++) {
 			int f = (i % file);
 			int rk =  (i / file);
-			rec.setRect(loc.x + f*10, loc.y + rk*10, 10, 10);
+			rec.setRect(loc.x-m + f*10, loc.y + rk*10, 10, 10);
 			g2.setPaint(Color.black);
 			g2.draw(rec);
 			g2.setPaint(army.color);

@@ -19,9 +19,8 @@ public class WarHammer
         game.addArmy(alex);
        //----------------------------------------------------------------------        
         uT = new Unit("Dwarf Warriers #1", 16, 5, "Warrior", theo);
-        uT.setLoc(150,120);
-//        uT.direction = 180;
-        uT.direction = 45;
+        uT.setLoc(150,220);
+        uT.direction = 180;
         uT.armourSave = 6; // dwarfs wear chainmail
         uT.standard = 1;
         uT.musician = 1;
@@ -30,14 +29,12 @@ public class WarHammer
         
 		Game.table.add(uT);
 		Game.table.validate();
-		
-//		uT.moveTo(200,200,100);
-		
+
 		//----------------------------------------------------------------------        
         uA = new Unit("Night Goblins Spearmen #1", 20, 5, "Night Goblins", alex);  
-        uA.setLoc(100, 120+100);
-//        uA.direction = 0;
-//        uA.standard = 1;
+        uA.setLoc(150, 220);
+        uA.direction = 0;
+        uA.standard = 1;
 //        uA.musician = 1;
 //        uA.champion = 1;
         
@@ -49,7 +46,7 @@ public class WarHammer
 
         //----------------------------------------------------------------------        
         uT = new Unit("Dwarf Warriers #2", 16, 5, "Warrior", theo);  
-        uT.setLoc(250, 120+100);
+        uT.setLoc(250, 220);
         uT.direction = 180;
         uT.armourSave = 6; // dwarfs wear chainmail
         uT.standard = 1;
@@ -58,30 +55,11 @@ public class WarHammer
         Game.table.add(uT);
         Game.table.validate();
         
-        // test moving
-        uT.direction = 0;
-        uT.moveDist(5);
-        Game.table.validate();
-        Game.table.repaint();
-        Game.input();
-
-        uT.direction = 45;
-        uT.moveDist(5);
-        Game.table.validate();
-        Game.table.repaint();
-        Game.input();
-
-        uT.direction = 90;
-        uT.moveDist(5);
-        Game.table.validate();
-        Game.table.repaint();
-        Game.input();
-
-        
         
         uA = new Unit("Night Goblins Spearmen #2", 20, 5, "Night Goblins", alex);  
-        uA.setLoc(200, 120);
-//        uA.standard = 1;
+        uA.setLoc(250, 220);
+        uA.direction = 0;
+        uA.standard = 1;
 //        uA.musician = 1;
  //       uA.champion = 1;
         Game.table.add(uA);

@@ -419,13 +419,15 @@ public class Game {
 	    distanceLoser += rollDice();
 	    if (pLoser.profile.movement > 6) 
 	        distanceLoser += rollDice();
+	    pLoser.rotate(180);
 	    pLoser.moveDist(distanceLoser);
+	    pLoser.rotate(180);
 
 	    distanceWinner = rollDice();
 	    distanceWinner += rollDice();
 	    if (pWinner.profile.movement > 6) 
 	        distanceWinner += rollDice();
-	    pLoser.moveDist(distanceWinner);
+	    pWinner.moveDist(distanceWinner);
 
 	    
 	    println( 2, "   "+pLoser.name+" flees "+distanceLoser+", "+pWinner.name+" pursues "+distanceWinner+"!");
