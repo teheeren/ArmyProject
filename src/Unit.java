@@ -38,6 +38,12 @@ public class Unit extends Component {
     Point loc = new Point();
 	Rectangle2D rect = new Rectangle2D.Double(60, 70, 120, 80);
 	double direction = 0;
+    boolean selected = false;
+    boolean rotating = false;
+    boolean attacking = false;
+    boolean moving = false;
+    boolean wheeling = false;
+
      
 	public Unit(String name, int numFighters, int file, String profileName, Army army) {
 		super();
@@ -218,6 +224,16 @@ public class Unit extends Component {
 		super.x += x_speed;
 		super.y += y_speed;
 		*/
+		
+		//  check for off the table
+		if ((loc.x <= 0) || (loc.x >= Game.width)) {
+			Game.log(name+" off the table "+loc.x+ " Destroyed ");
+			destroyed = true;
+		}
+		if ((loc.y <= 0) || (loc.y >= Game.height)) {
+			Game.log(name+" off the table "+loc.y+ " Destroyed ");
+			destroyed = true;
+		}
 	}
 	
 	public void paint(Graphics g) 
@@ -225,6 +241,9 @@ public class Unit extends Component {
 		Graphics2D g2 = (Graphics2D)g;
 		Rectangle2D rec = new Rectangle2D.Double();
 
+		if (destroyed)
+			return;
+				
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setStroke(drawingStroke);
@@ -233,31 +252,44 @@ public class Unit extends Component {
 		g2.rotate(Math.toRadians(direction));
 		g2.translate(-loc.x, -loc.y);
 		
+		
+		int r = file * 10;    // radius
+        int m = r/2;          // middle
 		int pm = profile.movement * 10;
-		int r = file * 10;
-        int m = r/2;
+		
+		if (attacking)
+		{
+		    pm *= 2;
+		}
 
-		g2.draw(new Arc2D.Double((double) loc.x - r - m,
-				(double) loc.y - r,
-				(double) r * 2,
-				(double) r * 2,
-				(double) 0,
-				(double) (pm * 180) / (Math.PI * r),
-				Arc2D.OPEN));
+        if (wheeling)
+        {
+        	g2.draw(new Arc2D.Double((double) loc.x - r - m,
+        			(double) loc.y - r,
+        			(double) r * 2,
+        			(double) r * 2,
+        			(double) 0,
+        			(double) (pm * 180) / (Math.PI * r),
+        			Arc2D.OPEN));
 
 
-		g2.draw(new Arc2D.Double((double) loc.x - m,
-				(double) loc.y - r,
-				(double) r * 2,
-				(double) r * 2,
-				(double) 180,
-				(double) -((pm * 180) / (Math.PI * r)),
-				Arc2D.OPEN));
-
-//		g2.drawLine(loc.x, loc.y, loc.x-pm, loc.y-pm);
-//		System.out.print(" pm = "+pm);
-
-		paintArrow(g2, loc.x, loc.y, loc.x, loc.y-pm );
+        	g2.draw(new Arc2D.Double((double) loc.x - m,
+        			(double) loc.y - r,
+        			(double) r * 2,
+        			(double) r * 2,
+        			(double) 180,
+        			(double) -((pm * 180) / (Math.PI * r)),
+        			Arc2D.OPEN));
+        }
+        
+        if (moving)
+        {
+		    paintArrow(g2, loc.x, loc.y, loc.x, loc.y-pm );
+        }
+        else
+        {
+		    paintArrow(g2, loc.x, loc.y, loc.x, loc.y-10 );
+        }
 		
 		rect.setRect(loc.x-m, loc.y , (numFighters / rank)*10, (numFighters / file)*10);
 

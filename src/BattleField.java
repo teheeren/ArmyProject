@@ -13,7 +13,9 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 
 
 public class BattleField extends JComponent
@@ -27,7 +29,76 @@ public class BattleField extends JComponent
 
 	public BattleField(final Game game)
 	{
-/*
+		/*
+		 * Key events
+		 */
+	    // R key action
+	    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("R"), "rotate");
+		this.getActionMap().put("rotate", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (unitSelected != null) {
+					Game.log(unitSelected.name + " rotating!");
+					unitSelected.rotating = true;
+				}
+			}
+		});
+
+	    // W key action
+	    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("W"), "rotate");
+		this.getActionMap().put("wheeling", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (unitSelected != null) {
+					Game.log(unitSelected.name + " wheeling!");
+					unitSelected.wheeling = true;
+				}
+			}
+		});
+
+	    // A key action
+	    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("A"), "attack");
+		this.getActionMap().put("attack", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (unitSelected != null) {
+					Game.log(unitSelected.name + " attacking!");
+					unitSelected.attacking = true;
+				}
+			}
+		});
+
+	    // M key action
+	    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("M"), "move");
+		this.getActionMap().put("move", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (unitSelected != null) {
+					Game.log(unitSelected.name + " moving!");
+					unitSelected.moving = true;
+				}
+			}
+		});
+
+	    // escape key action
+	    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("ESCAPE"), "escape");
+		this.getActionMap().put("escape", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (unitSelected != null) {
+					unitSelected.rotating = false;
+					unitSelected.moving = false;
+					unitSelected.attacking = false;
+					unitSelected.wheeling = false;
+				}
+			}
+		});
+		/*
 		JTextField typingArea = new JTextField(20);
         typingArea.addKeyListener(new KeyListener()
 		  {
@@ -52,7 +123,9 @@ public class BattleField extends JComponent
             }
 		  } );
 */
-		
+		/*
+		 * Mouse events
+		 */
 		this.addMouseListener(new MouseAdapter()
 		  {
 		    public void mousePressed(MouseEvent e)
@@ -60,13 +133,47 @@ public class BattleField extends JComponent
 		    	Game.log(""+e.getX());
 		    	Game.log(""+e.getY());
 
-				for (Army a : game.armies) {
-					for (Unit u : a.units) {
-					if ( u.checkIntersection(e.getX(), e.getY()))
+				for (Army a : game.armies) 
+				{
+					for (Unit u : a.units) 
+					{
+						// found unit clicked on
+					    if ( u.checkIntersection(e.getX(), e.getY()))
 						{
-						    unitSelected = u;
-			            	Game.log(unitSelected.name + " selected!");
-							break; 
+							// check for attacking
+							if (unitSelected != null) {
+								if (unitSelected.attacking) {
+									unitSelected.setCombatUnits(u);
+									Game.log(unitSelected.name + " attacking " + u.name);
+									unitSelected.attacking = false;
+									break;
+								}
+
+								// check for moving
+								if (unitSelected.moving) 
+								{
+									float dx = e.getX() - unitSelected.loc.x;
+									float dy = e.getY() - unitSelected.loc.y;
+									int dist = (int) Math.sqrt((dx * dx) + (dy * dy));
+	//								unitSelected.moveDist(dist);
+									Game.log("dist " + dist);
+									break;
+								}
+							}
+
+					    	// check for unselect
+					    	if(unitSelected == u)
+					    	{
+					    		Game.log(unitSelected.name + " unselected!");
+					    		unitSelected.selected = false;
+					    		unitSelected = null;
+					    	}
+					    	else
+					    	{
+					    		unitSelected = u;
+					    		u.selected = true;
+					    		Game.log(unitSelected.name + " selected!");
+					    	}
 						}
 					}
 				}
@@ -78,24 +185,32 @@ public class BattleField extends JComponent
 
 		    public void mouseReleased(MouseEvent e)
 			{
-/*
-   		  	  Shape r = makeRectangle(
-			   	          startDrag.x, startDrag.y,
-						      e.getX(), e.getY());
-				  shapes.add(r);
- */
 			  startDrag = null;
 			  endDrag = null;
 			  repaint();
 			}
+		    
 		  } );
 
 		this.addMouseMotionListener(new MouseMotionAdapter()
 		{
-		  public void mouseDragged(MouseEvent e)
+//			  public void mouseDragged(MouseEvent e)
+		  public void mouseMoved(MouseEvent e)
 		  {
 		    endDrag = new Point(e.getX(), e.getY());
-			repaint();
+		    if (unitSelected != null)
+	    	{
+				float dx = e.getX()-unitSelected.loc.x;
+				float dy = e.getY()-unitSelected.loc.y;
+
+			    if (unitSelected.rotating)
+			    {
+
+					unitSelected.direction = Math.toDegrees(Math.atan(dy/dx)) - 90;
+			    	Game.log("direction  "+unitSelected.direction);
+			    }
+				
+	    	}
 		  }
 		} );
 		

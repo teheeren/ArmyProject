@@ -19,8 +19,8 @@ import javax.swing.JTextArea;
 
 
 public class Game {
-	int width = 900;
-	int height = 600;
+	static int width = 900;
+	static int height = 600;
 	
 	// toHitChart [Attackers Weapon Skill] [ Opponents Weapon Skill]
 	public static final int[][] toHitChart = {
@@ -97,9 +97,9 @@ public class Game {
         txtFrame.add(scrollPane);
         
 //        txtFrame.add(textArea);
-        txtFrame.setSize(800, 800);
+        txtFrame.setSize(450, height);
         txtFrame.setVisible(true);
-        txtFrame.setLocation(100+width, 100);
+        txtFrame.setLocation(width, 100);
         txtFrame.repaint();
 		
         // set up battlefield 
@@ -109,7 +109,7 @@ public class Game {
         
         table.setSize(width, height);
         table.setVisible(true);
-        table.setLocation(100, 100);
+        table.setLocation(0, 10);
         table.repaint();
 	}
 

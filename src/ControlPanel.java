@@ -18,7 +18,7 @@ public class ControlPanel extends JFrame {
 		frame1 = new JFrame("Control Panel");
 		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame1.setSize(400, 400);
-		frame1.setLocation(100, 700);
+		frame1.setLocation(0, 610);
 		frame1.getContentPane().add(panel1);
 
 		// continue button
