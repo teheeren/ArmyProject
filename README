@@ -2,3 +2,37 @@ The ultimate goal of this project is to take the output of WarFoundry and use it
 
 http://warfoundry.co.uk/
 
+Outline:
+>> WarHammer.java
+This is the main() class. It initializes some Army's and Units for
+testing and starts the Game. Goal is that we have a generic game playing
+engine and this module would set up the warhammer rules.
+
+>> Game.java
+The game sets up a table with a BattleField to display the units, a
+Text frame for messages and  a Control Panel to put control buttons.
+Warhammer tells it to play() and it starts up the turns and all it
+really does right now is the "Close Combat" phase.
+
+>> BattleField.java
+Controls actions on the battle field. only active in 
+phase 2. Movement phase 
+ MouseListener state:
+  Idle - click on new unit => Selected; else ignore
+  Selected:
+    Idle - 
+    Moving - 
+    Attacking - doubled distance, next click is unit to attack
+    Wheeling -
+    
+ 
+ KeyListener:
+ (Unit must be selected)
+ - "A" Attack mode next click selects 
+
+>> ControlPanel.java
+Contains control buttons such as:
+ - Next Turn
+ 
+
+

@@ -133,6 +133,21 @@ public class BattleField extends JComponent
 		    	Game.log(""+e.getX());
 		    	Game.log(""+e.getY());
 
+				// check for moving
+		    	if (unitSelected != null) 
+		    	{
+
+		    		if (unitSelected.moving) 
+		    		{
+		    			float dx = e.getX() - unitSelected.loc.x;
+		    			float dy = e.getY() - unitSelected.loc.y;
+		    			int dist = (int) Math.sqrt((dx * dx) + (dy * dy));
+		    			//								unitSelected.moveDist(dist);
+		    			Game.log("dist " + dist);
+		    			return;
+		    		}
+		    	}
+
 				for (Army a : game.armies) 
 				{
 					for (Unit u : a.units) 
@@ -146,17 +161,6 @@ public class BattleField extends JComponent
 									unitSelected.setCombatUnits(u);
 									Game.log(unitSelected.name + " attacking " + u.name);
 									unitSelected.attacking = false;
-									break;
-								}
-
-								// check for moving
-								if (unitSelected.moving) 
-								{
-									float dx = e.getX() - unitSelected.loc.x;
-									float dy = e.getY() - unitSelected.loc.y;
-									int dist = (int) Math.sqrt((dx * dx) + (dy * dy));
-	//								unitSelected.moveDist(dist);
-									Game.log("dist " + dist);
 									break;
 								}
 							}
