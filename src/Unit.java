@@ -89,6 +89,22 @@ public class Unit extends Component {
 		}
 	}
 
+	public void moveDist(double dist)
+	{
+		double x2;
+		double y2;
+
+		x2 = (Math.cos( Math.toRadians(direction-90)) * dist) + loc.x;
+		y2 = (Math.sin( Math.toRadians(direction-90)) * dist) + loc.y;
+		Game.log(" ");
+
+		try {
+			moveTo(x2, y2, 0);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void moveDist(int dist)
 	{
 		int x2;
@@ -105,25 +121,48 @@ public class Unit extends Component {
 		}
 	}
 
+	public void wheelRight(double a)
+	{
+		double h;
+        int m = (file * 10)/2;          // middle
+
+		Game.log("m = "+m);
+		Game.log("x = "+loc.x+", y = "+loc.y);
+
+        h = m * Math.sin(Math.toRadians(a)) / (Math.sin ((180 - Math.toRadians(a))/2) );
+        h /= 10;
+		Game.log("distance = "+h);
+
+	    direction = (direction + a/2) % 360;
+	    moveDist((int)h);
+	    direction = (direction + a/2) % 360;	    moveDist(1);
+        repaint();
+
+		Game.log("x = "+loc.x+", y = "+loc.y+" , direction"+direction);
+
+//	    loc.x += Math.asin(h);
+//	    loc.y += Math.acos(h);
+	}
+
 	public void rotate(int angle)
 	{
 	    direction = (direction + angle) % 360;
 	    moveDist(rank);
 	}
 
-	public void moveTo(int x2, int y2, int speed) throws InterruptedException
+	public void moveTo(double x2, double y2, int speed) throws InterruptedException
 	{
-		float dx = x2-loc.x;
-		float dy = y2-loc.y;
+		double dx = x2-loc.x;
+		double dy = y2-loc.y;
 		//		float dy = loc.y-y2;
 		
 		if (dx == 0)
 			dx = (float) .0001;
 		if (dy == 0)
 			dy = (float) .0001;
-		float slope = dy/dx;
+		double slope = dy/dx;
 //		float x, y;
-		float b =(y2-slope*x2);
+		double b =(y2-slope*x2);
 
 		if (slope == 0)
 			slope = (float).00001;

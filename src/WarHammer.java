@@ -57,7 +57,8 @@ public class WarHammer
         
         
         uA = new Unit("Night Goblins Spearmen #2", 20, 5, "Night Goblins", alex);  
-        uA.setLoc(250, 220);
+//        uA.setLoc(250, 220);
+        uA.setLoc(250, 320);
         uA.direction = 0;
         uA.standard = 1;
 //        uA.musician = 1;
@@ -69,6 +70,22 @@ public class WarHammer
         uT.setCombatUnits(uA);
         uA.setCombatUnits(uT);
         
+        Game.input();
+    	uA.wheelRight(45);
+        Game.input();
+    	uA.wheelRight(45);
+        Game.input();
+    	uA.wheelRight(45);
+        Game.input();
+    	uA.wheelRight(45);
+        Game.input();
+    	uA.wheelRight(45);
+        Game.input();
+    	uA.wheelRight(45);
+        Game.input();
+    	uA.wheelRight(45);
+        Game.input();
+    	uA.wheelRight(45);
         
         
 /*
