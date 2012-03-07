@@ -54,7 +54,7 @@ public class Game {
 
 	String name;
 	ArrayList<Army> armies = new ArrayList<Army>();
-	static int debugLevel = 2;
+	static int debugLevel = 5;
 	public static JFrame table;
 	public static JFrame txtFrame;
 	public static JTextArea textArea;
@@ -128,7 +128,7 @@ public class Game {
 
         try {
         	// TODO save game
-			Game.write(a1.units.get(0).profile, "xxx");
+			Game.write(a1.units, "xxx");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,35 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="1.7.0_02" class="java.beans.XMLDecoder">
- <object class="Profile">
-  <void property="attacks">
-   <int>1</int>
-  </void>
-  <void property="balisticSkill">
-   <int>3</int>
-  </void>
-  <void property="initiative">
-   <int>2</int>
-  </void>
-  <void property="leadership">
-   <int>9</int>
-  </void>
-  <void property="movement">
-   <int>3</int>
-  </void>
-  <void property="name">
-   <string>Warrior</string>
-  </void>
-  <void property="strength">
-   <int>3</int>
-  </void>
-  <void property="toughness">
-   <int>4</int>
-  </void>
-  <void property="weaponSkill">
-   <int>4</int>
-  </void>
-  <void property="wounds">
-   <int>1</int>
-  </void>
- </object>
+ <object class="java.util.ArrayList"/>
 </java>

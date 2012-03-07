@@ -210,7 +210,7 @@ public class BattleField extends JComponent
 			    if (unitSelected.rotating)
 			    {
 
-					unitSelected.direction = Math.toDegrees(Math.atan(dy/dx)) - 90;
+					unitSelected.direction = (float) (Math.toDegrees(Math.atan(dy/dx)) - 90);
 			    	Game.log("direction  "+unitSelected.direction);
 			    }
 				

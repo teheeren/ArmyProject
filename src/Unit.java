@@ -37,7 +37,7 @@ public class Unit extends Component {
     public int x_speed, y_speed;
     Point loc = new Point();
 	Rectangle2D rect = new Rectangle2D.Double(60, 70, 120, 80);
-	double direction = 0;
+	float direction = 0;
     boolean selected = false;
     boolean rotating = false;
     boolean attacking = false;
@@ -89,13 +89,13 @@ public class Unit extends Component {
 		}
 	}
 
-	public void moveDist(double dist)
+	public void moveDist(float dist)
 	{
-		double x2;
-		double y2;
+		float x2;
+		float y2;
 
-		x2 = (Math.cos( Math.toRadians(direction-90)) * dist) + loc.x;
-		y2 = (Math.sin( Math.toRadians(direction-90)) * dist) + loc.y;
+		x2 = (float) ((Math.cos( Math.toRadians(direction-90)) * dist) + x);
+		y2 = (float) ((Math.sin( Math.toRadians(direction-90)) * dist) + y);
 		Game.log(" ");
 
 		try {
@@ -107,11 +107,11 @@ public class Unit extends Component {
 	
 	public void moveDist(int dist)
 	{
-		int x2;
-		int y2;
+		float x2;
+		float y2;
 
-		x2 = (int)(Math.cos( Math.toRadians(direction-90)) * dist * 10) + loc.x;
-		y2 = (int)(Math.sin( Math.toRadians(direction-90)) * dist * 10) + loc.y;
+		x2 = (int)(Math.cos( Math.toRadians(direction-90)) * dist * 10) + x;
+		y2 = (int)(Math.sin( Math.toRadians(direction-90)) * dist * 10) + y;
 		Game.log(" ");
 
 		try {
@@ -121,10 +121,10 @@ public class Unit extends Component {
 		}
 	}
 
-	public void wheelRight(double a)
+	public void wheelRight(float a)
 	{
 		double h;
-        int m = (file * 10)/2;          // middle
+        float m = (file * 10)/2;          // middle
 
 		Game.log("m = "+m);
 		Game.log("x = "+loc.x+", y = "+loc.y);
@@ -138,7 +138,7 @@ public class Unit extends Component {
 	    direction = (direction + a/2) % 360;	    moveDist(1);
         repaint();
 
-		Game.log("x = "+loc.x+", y = "+loc.y+" , direction"+direction);
+		Game.log("x = "+x+", y = "+y+" , direction"+direction);
 
 //	    loc.x += Math.asin(h);
 //	    loc.y += Math.acos(h);
@@ -150,19 +150,19 @@ public class Unit extends Component {
 	    moveDist(rank);
 	}
 
-	public void moveTo(double x2, double y2, int speed) throws InterruptedException
+	public void moveTo(float x2, float y2, int speed) throws InterruptedException
 	{
-		double dx = x2-loc.x;
-		double dy = y2-loc.y;
+		float dx = x2-x;
+		float dy = y2-y;
 		//		float dy = loc.y-y2;
 		
 		if (dx == 0)
 			dx = (float) .0001;
 		if (dy == 0)
 			dy = (float) .0001;
-		double slope = dy/dx;
+		float slope = dy/dx;
 //		float x, y;
-		double b =(y2-slope*x2);
+		float b =(y2-slope*x2);
 
 		if (slope == 0)
 			slope = (float).00001;
@@ -170,13 +170,13 @@ public class Unit extends Component {
 		if (Math.abs(slope) < 1)
 		{
 			// we're changing by x
-			if (loc.x < x2)
+			if (x < x2)
 			{
 
 				// we're incrementing from x to x2
-			    for (; loc.x < x2; loc.x++)
+			    for (; x < x2; x++)
 			    {
-			    	loc.y = (int)(((float)loc.x * slope) + b);
+			    	y = (x * slope) + b;
 			    	Game.table.validate();
 			    	Game.table.repaint();
 			    	pause(speed);
@@ -185,9 +185,9 @@ public class Unit extends Component {
 			else
 			{
 				// we're decrementing from x to x2
-			    for (; loc.x > x2; loc.x--)
+			    for (; x > x2; x--)
 			    {
-			    	loc.y = (int)(((float)loc.x * slope) + b);
+			    	y = ((float)x * slope) + b;
 			    	Game.table.validate();
 			    	Game.table.repaint();
 			    	pause(speed);
@@ -197,12 +197,12 @@ public class Unit extends Component {
 		else
 		{
 			// we're changing by y
-			if (loc.y < y2)
+			if (y < y2)
 			{
 				// we're incrementing y to y2
-			    for (; loc.y < y2; loc.y++)
+			    for (; y < y2; y++)
 			    {
-			    	loc.x = (int)(((float)loc.y - b) / slope);
+			    	x = ((float)y - b) / slope;
 			    	Game.table.validate();
 			    	Game.table.repaint();
 			    	pause(speed);
@@ -211,9 +211,9 @@ public class Unit extends Component {
 			else
 			{
 				// we're decrementing y to y2
-			    for (; loc.y > y2; loc.y--)
+			    for (; y > y2; y--)
 			    {
-			    	loc.x = (int)(((float)loc.y - b) / slope);
+			    	x = ((float)y - b) / slope;
 			    	Game.table.validate();
 			    	Game.table.repaint();
 			    	pause(speed);
@@ -265,12 +265,12 @@ public class Unit extends Component {
 		*/
 		
 		//  check for off the table
-		if ((loc.x <= 0) || (loc.x >= Game.width)) {
-			Game.log(name+" off the table "+loc.x+ " Destroyed ");
+		if ((x <= 0) || (x >= Game.width)) {
+			Game.log(name+" off the table "+x+ " Destroyed ");
 			destroyed = true;
 		}
-		if ((loc.y <= 0) || (loc.y >= Game.height)) {
-			Game.log(name+" off the table "+loc.y+ " Destroyed ");
+		if ((y <= 0) || (y >= Game.height)) {
+			Game.log(name+" off the table "+y+ " Destroyed ");
 			destroyed = true;
 		}
 	}
@@ -279,7 +279,9 @@ public class Unit extends Component {
 	{
 		Graphics2D g2 = (Graphics2D)g;
 		Rectangle2D rec = new Rectangle2D.Double();
-
+		
+        loc.x = Math.round(x);
+        loc.y = Math.round(y);
 		if (destroyed)
 			return;
 				
